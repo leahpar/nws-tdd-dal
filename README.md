@@ -1,3 +1,10 @@
+# Implémentation d'un DAL/DAO en TDD.
+
+Mise en pratique du développement en TDD.
+
+Principes et utilisation d'un DAL.
+
+
 ## TDD - Test Driven Development
 
 [Wikipedia](https://fr.wikipedia.org/wiki/Test_driven_development)
@@ -80,13 +87,14 @@ Gérer des Trucs !
 PDO : PHP Data Objects
 
 [Connexion](https://www.php.net/manual/fr/pdo.connections.php)
+
 [Requêtes](https://www.php.net/manual/fr/pdo.prepared-statements.php)
 
 ## Pour aller plus loin
 
 ### Singleton
 
-Utilisation d'un design pattern singleton ([wikipedia](https://fr.wikipedia.org/wiki/Singleton_(patron_de_conception) ) pour la connexion à la base de données
+Utilisation d'un design pattern singleton ([wikipedia](https://fr.wikipedia.org/wiki/Singleton_(patron_de_conception))) pour la connexion à la base de données
 
 ### Structure tables
 

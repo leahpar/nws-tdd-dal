@@ -51,9 +51,11 @@ Il va typiquement se préoccuper de matérialiser les clés étrangères par des
 ### Installation
 
 ```
-git clone https://..... <mon-projet>
+git clone https://github.com/leahpar/nws-tdd-dal.git <mon-projet>
 cd <mon-projet>
 ```
+
+Créer une base de données (MySQL, PostgreSQL, SQLite...).
 
 Éditer le fichier `config.php`.
 
@@ -62,22 +64,29 @@ cd <mon-projet>
 Gérer des Trucs !
 
 - Créer des attributs et accesseurs d'une entité `Truc`.
-- Cmopléter la classe `TrucDAO` pour pouvoir ajouter, modifier, supprimer, lister, chercher... des trucs.
+- Compléter la classe `TrucDAO` pour pouvoir ajouter, modifier, supprimer, lister, chercher... des trucs.
 
-### Coder !
+### Coder
 
 1. Ajouter un test dans `tdd.php`
 2. Tester : `php tdd.php`
-3. Implémenter le test.
+3. Implémenter la fonction
 4. Tester : `php tdd.php`
 5. Nettoyer et commenter le code
 6. GOTO 1
+
+### Documentation PDO
+
+PDO : PHP Data Objects
+
+[Connexion](https://www.php.net/manual/fr/pdo.connections.php)
+[Requêtes](https://www.php.net/manual/fr/pdo.prepared-statements.php)
 
 ## Pour aller plus loin
 
 ### Singleton
 
-Utilisation d'un design pattern singleton ([wikipedia](https://fr.wikipedia.org/wiki/Singleton_(patron_de_conception)) pour la connexion à la base de données
+Utilisation d'un design pattern singleton ([wikipedia](https://fr.wikipedia.org/wiki/Singleton_(patron_de_conception) ) pour la connexion à la base de données
 
 ### Structure tables
 

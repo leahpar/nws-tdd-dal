@@ -4,29 +4,73 @@ require_once "config.php";
 
 class DAL
 {
+
+    /** @var PDO */
+    private $dbh = null;
+
+    /** @var PDOStatement */
+    private $lastStmt = null;
+
     public function connect()
     {
-        // TODO
-        return false;
+        try {
+            $this->dbh = new PDO('mysql:host=' . HOST . ';dbname=' . DBNAME, USERNAME, PASSWORD);
+        }
+        catch (PDOException $e) {
+            echo "Erreur : " . $e->getMessage();
+        }
+        return $this->isConnected();
     }
 
     public function isConnected()
     {
-        // TODO
-        return false;
+        return $this->dbh !== null;
     }
 
     public function disconnect()
     {
-        // TODO
-        return false;
+        $this->dbh = null;
+        return true;
     }
 
-    public static function execute($query, $data)
+    public function execute(string $query, array $data)
     {
-        // TODO
-        return false;
+        try {
+            $stmt = $this->dbh->prepare($query);
+
+            foreach ($data as $key => $value) {
+                $stmt->bindParam(':' . $key, $data[$key]);
+            }
+            $this->lastStmt = $stmt;
+            return $stmt->execute();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return false;
+        }
     }
+
+    public function lastInsertId()
+    {
+        try {
+            return $this->dbh->lastInsertId();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return 0;
+        }
+    }
+
+    public function fetchData()
+    {
+        if ($this->lastStmt == null) {
+            return null;
+        }
+
+        return $this->lastStmt->fetchAll();
+    }
+
+
 
 
 }

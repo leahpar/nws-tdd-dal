@@ -12,6 +12,7 @@ class Test
         }
         else {
             self::error("[KO] " . $test);
+            die();
         }
     }
 

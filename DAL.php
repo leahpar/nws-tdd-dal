@@ -129,6 +129,79 @@ class DAL
     }
 
 
+    public function add(string $entity, array $data)
+    {
+        //$sql = "insert into Perso (id, name, hp, mana)
+        //      value (null, :name, :hp, :mana)";
+
+
+        $sql = "insert into ".$entity." (";
+        $sql .= implode(',', array_keys($data));
+        $sql .= ") value (";
+        $sql .= implode(',', array_map(function ($k) {
+            return $k == "id" ? "null" : ":" . $k;
+        },
+            array_keys($data)));
+        $sql .= ")";
+
+        unset($data["id"]);
+        return $this->execute($sql, $data);
+    }
+
+    public function getById(string $entity, array $keys, int $id)
+    {
+        $sql = "SELECT ";
+        $sql .= implode(',', $keys);
+        $sql .= " from " . $entity;
+        $sql .= " where id = :id";
+
+        $this->execute($sql, ["id" => $id]);
+
+        return $this->lastStmt->fetch();
+    }
+
+    public function update(string $entity, array $data, int $id)
+    {
+        $sql = "update ".$entity." set ";
+        $cols = [];
+        foreach ($data as $k => $v) {
+            if ($k == "id") continue; // On ignore l'ID ici
+            $cols[] = $k . " =  :" . $k;
+        }
+        $sql .= implode(" ,", $cols);
+        $sql .= " WHERE id = :id";
+
+        return $this->execute($sql, $data);
+    }
+
+    public function delete(string $entity, int $id)
+    {
+        $sql = "delete from ".$entity." where id = :id";
+        return $this->execute($sql, ['id' => $id]);
+    }
+
+    public function search(string $entity, array $params)
+    {
+        $sql = "SELECT ";
+        $sql .= implode(',', array_keys((new Perso())->dehydrate()));
+        $sql .= " from " . $entity;
+
+        if (count($params) > 0) {
+            $sql .= " Where ";
+        }
+
+        $cols = [];
+        foreach ($params as $k => $v) {
+            $cols[] = $k . " = :" . $k;
+        }
+        $sql .= implode(" AND ", $cols);
+        //var_dump($sql, $params);
+
+        $res = $this->execute($sql, $params);
+        if ($res === false) return [];
+
+        return $this->fetchData();
+    }
 
 
 }

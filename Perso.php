@@ -3,7 +3,7 @@
 class Perso
 {
     /** @var int */
-    private $id;
+    private $id = null;
     /** @var string */
     private $name;
     /** @var int */
@@ -100,7 +100,6 @@ class Perso
     public function dehydrate(): array
     {
         $data = get_object_vars($this);
-        unset($data["id"]); // Beark;
         return $data;
     }
 

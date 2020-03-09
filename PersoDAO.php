@@ -20,59 +20,111 @@ class PersoDAO
      */
     public function add(Perso $perso)
     {
-        $sql = "insert into Perso (id, name, hp, mana)
-              value (null, :name, :hp, :mana)";
+        // Données "brutes"
+        $data = $perso->dehydrate();
 
-        $this->dal->execute($sql, $perso->dehydrate());
+        // Insertion
+        $res = $this->dal->add("Perso", $data);
 
-        // TODO: vérifier que l'execute est OK
-        $id = $this->dal->lastInsertId();
-        $perso->setId($id);
-
-        return true;
+        if ($res) {
+            // Récupération de l'ID inséré
+            $id = $this->dal->lastInsertId();
+            $perso->setId($id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * Récupère un Perso sur l'ID
+     * @param int $id
+     * @return Perso|null
+     */
     public function get(int $id): ?Perso
     {
-        $sql = "SELECT id, name, hp, mana from Perso where id = :id";
-        $this->dal->execute($sql, ["id" => $id]);
+        // Données à récupérer
+        $keys = array_keys((new Perso())->dehydrate());
 
-        $data = $this->dal->fetchOne();
-        if ($data == null) {
-            return null;
-        }
+        // Requête
+        $data = $this->dal->getById("Perso", $keys, $id);
 
+        // Aucun résultat
+        if ($data === false) return null;
+
+        // Hydratation
         $perso = new Perso($data);
         return $perso;
     }
 
+    /**
+     * Mise à jour d'un Perso
+     * @param Perso $perso
+     * @return bool
+     */
     public function update(Perso $perso)
     {
-        $sql = "update Perso 
-                set name = :name,
-                    hp   = :hp,
-                    mana = :mana";
+        $data = $perso->dehydrate();
 
-        $this->dal->execute($sql, $perso->dehydrate());
-
-        // TODO: vérifier que l'execute est OK
-
-        return true;
+        return $this->dal->update("Perso", $data, $perso->getId());
     }
 
+    /**
+     * Suppression d'un Perso
+     * @param Perso $perso
+     * @return bool
+     */
     public function delete(Perso $perso)
     {
-        $sql = "delete from Perso where id = :id";
-
-        return $this->dal->execute($sql, [
-            "id" => $perso->getId(),
-        ]);
+        return $this->dal->delete("Perso", $perso->getId());
     }
 
+
+    /**
+     * Recherche générique d'un unique Perso
+     * @param $params
+     * @return Perso|null
+     */
+    public function searchOne($params)
+    {
+        $res = $this->search($params);
+        if (count($res) == 1) {
+            return $res[0];
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Recherche générique de Persos
+     * @param $params
+     * @return array
+     */
     public function search($params)
     {
-        // TODO
-        return false;
+        $rows = $this->dal->search("Perso", $params);
+
+        $persos = [];
+        foreach ($rows as $row) {
+            $persos[] = new Perso($row);
+        }
+
+        return $persos;
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        if (substr($name, 0, 8) == "searchBy") {
+            $attr = strtolower(substr($name, 8));
+            return $this->search([$attr => $arguments[0]]);
+        }
+        else if (substr($name, 0, 5) == "getBy") {
+            $attr = strtolower(substr($name, 5));
+            return $this->searchOne([$attr => $arguments[0]]);
+        }
+        else {
+            throw new \Exception("Methode inconnue");
+        }
     }
 
     // ...

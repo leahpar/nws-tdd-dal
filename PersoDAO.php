@@ -20,39 +20,53 @@ class PersoDAO
      */
     public function add(Perso $perso)
     {
-        // TODO: faire en dynamique avec get_object_vars()
-
         $sql = "insert into Perso (id, name, hp, mana)
               value (null, :name, :hp, :mana)";
 
-        $this->dal->execute($sql, [
-            "name" => $perso->getName(),
-            "hp" => $perso->getHp(),
-            "mana" => $perso->getMana()
-        ]);
+        $this->dal->execute($sql, $perso->dehydrate());
 
         // TODO: vérifier que l'execute est OK
+        $id = $this->dal->lastInsertId();
+        $perso->setId($id);
 
-        return $this->dal->lastInsertId();
+        return true;
     }
 
-
-    public function get(int $id)
+    public function get(int $id): ?Perso
     {
-        // TODO
-        return false;
+        $sql = "SELECT id, name, hp, mana from Perso where id = :id";
+        $this->dal->execute($sql, ["id" => $id]);
+
+        $data = $this->dal->fetchOne();
+        if ($data == null) {
+            return null;
+        }
+
+        $perso = new Perso($data);
+        return $perso;
     }
 
     public function update(Perso $perso)
     {
-        // TODO
-        return false;
+        $sql = "update Perso 
+                set name = :name,
+                    hp   = :hp,
+                    mana = :mana";
+
+        $this->dal->execute($sql, $perso->dehydrate());
+
+        // TODO: vérifier que l'execute est OK
+
+        return true;
     }
 
     public function delete(Perso $perso)
     {
-        // TODO
-        return false;
+        $sql = "delete from Perso where id = :id";
+
+        return $this->dal->execute($sql, [
+            "id" => $perso->getId(),
+        ]);
     }
 
     public function search($params)

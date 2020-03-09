@@ -64,9 +64,9 @@ $perso = new Perso();
 $perso->setName("toto");
 $perso->setHp("100");
 $perso->setMana("10");
-$id = $dao->add($perso);
-Test::assert("Ajout d'un perso", $id > 0);
-$perso->setId($id);
+Test::assert("Ajout d'un perso 1/2", $dao->add($perso) == true);
+Test::assert("Ajout d'un perso 2/2", $perso->getId() > 0);
+$id = $perso->getId();
 
 
 /**
@@ -75,8 +75,27 @@ $perso->setId($id);
 
 $perso2 = $dao->get($id);
 Test::assert("Sélection d'un perso", $perso == $perso2);
-//Test::assert("Sélection d'un perso", $perso instanceof Perso);
-//Test::assert("Sélection d'un perso", $perso->getName() == "toto");
-//Test::assert("Sélection d'un perso", $perso->getHp()   == "100");
-//Test::assert("Sélection d'un perso", $perso->getMana() == "10");
+
+/**
+ * Mise à jour d'un perso
+ */
+
+$perso->setName("toto2");
+Test::assert("Mise à jour d'un perso 1/2", $dao->update($perso));
+$perso2 = $dao->get($id);
+Test::assert("Mise à jour d'un perso 2/2", $perso == $perso2);
+
+/**
+ * Suppression d'un perso
+ */
+
+Test::assert("Suppression d'un perso", $dao->delete($perso));
+
+
+/**
+ * Sélection d'un perso inexistant
+ */
+
+$perso2 = $dao->get($id);
+Test::assert("Sélection d'un perso inexistant", $perso2 == null);
 

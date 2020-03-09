@@ -12,6 +12,17 @@ class Perso
     private $mana;
 
     /**
+     * Perso constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = null)
+    {
+        if ($data) {
+            $this->hydrate($data);
+        }
+    }
+
+    /**
      * @return int
      */
     public function getId(): ?int
@@ -73,6 +84,24 @@ class Perso
     public function setMana(?int $mana): void
     {
         $this->mana = $mana;
+    }
+
+
+    public function hydrate(array $data)
+    {
+        foreach ($data as $key => $value) {
+            $method = 'set'.ucfirst($key);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            }
+        }
+    }
+
+    public function dehydrate(): array
+    {
+        $data = get_object_vars($this);
+        unset($data["id"]); // Beark;
+        return $data;
     }
 
 

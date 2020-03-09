@@ -99,7 +99,33 @@ class DAL
             return null;
         }
 
-        return $this->lastStmt->fetchAll();
+        try {
+            return $this->lastStmt->fetchAll();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
+    /**
+     * Récupère la donnée de la dernière requête exécutée
+     * (à utiliser dans le cas d'un SELECT unique)
+     * @return array|null
+     */
+    public function fetchOne()
+    {
+        if ($this->lastStmt == null) {
+            return null;
+        }
+
+        try {
+            return $this->lastStmt->fetch();
+        }
+        catch (PDOException $e) {
+            echo $e->getMessage();
+            return null;
+        }
     }
 
 

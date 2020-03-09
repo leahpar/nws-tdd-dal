@@ -13,39 +13,34 @@ class PersoDAO
         $this->dal = $dal;
     }
 
+    /**
+     * Sauvegarde une entité en base
+     * @param Perso $perso
+     * @return int|string
+     */
     public function add(Perso $perso)
     {
+        // TODO: faire en dynamique avec get_object_vars()
+
         $sql = "insert into Perso (id, name, hp, mana)
               value (null, :name, :hp, :mana)";
+
         $this->dal->execute($sql, [
-           "name" => $perso->getName(),
-           "hp" => $perso->getHp(),
-           "mana" => $perso->getMana()
+            "name" => $perso->getName(),
+            "hp" => $perso->getHp(),
+            "mana" => $perso->getMana()
         ]);
+
+        // TODO: vérifier que l'execute est OK
 
         return $this->dal->lastInsertId();
     }
 
 
-    public function get(int $id): Perso
+    public function get(int $id)
     {
-        $sql = "SELECT id, name, hp, mana from Perso where id = :id";
-        $this->dal->execute($sql, ["id" => $id]);
-
-        $data = $this->dal->fetchData();
-        if (count($data) == 0 || count($data) > 1) {
-            return null;
-        }
-
-        $data = $data[0];
-
-        // TODO: hydratation
-        $perso = new Perso();
-        $perso->setId($data["id"] ?? null);
-        $perso->setName($data["name"] ?? null);
-        $perso->setHp($data["hp"] ?? null);
-        $perso->setMana($data["mana"] ?? null);
-        return $perso;
+        // TODO
+        return false;
     }
 
     public function update(Perso $perso)

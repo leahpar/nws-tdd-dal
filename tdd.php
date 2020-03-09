@@ -53,11 +53,13 @@ Test::assert("Requête SQL avec paramètres",
     $dal->execute($sql, ["name" => "jean"]));
 
 
-$dao = new PersoDAO($dal);
 
 /**
  * Ajout d'un perso
  */
+
+$dao = new PersoDAO($dal);
+
 $perso = new Perso();
 $perso->setName("toto");
 $perso->setHp("100");
@@ -70,6 +72,7 @@ $perso->setId($id);
 /**
  * Sélection d'un perso
  */
+
 $perso2 = $dao->get($id);
 Test::assert("Sélection d'un perso", $perso == $perso2);
 //Test::assert("Sélection d'un perso", $perso instanceof Perso);

@@ -38,7 +38,7 @@ class Perso
     /**
      * @param string $name
      */
-    public function setame(?string $name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }
